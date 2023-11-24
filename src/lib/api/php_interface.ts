@@ -2,7 +2,13 @@
 import {api_url, session_id, user} from "$lib/api/settings_stored";
 import {get} from "svelte/store";
 
-export function api_get(url: string, query_body: object, callback: (text: any) => void, require_auth: boolean = true) {
+export function api_get(
+    url: string,
+    query_body: object,
+    callback: (text: any) => void,
+    catch_err: (data: any) => void,
+    require_auth: boolean = false
+) {
     const keys = Object.keys(query_body);
     // @ts-ignore
     const query = keys.map(key => key + '=' + query_body[key]).join('&');
@@ -28,16 +34,25 @@ export function api_get(url: string, query_body: object, callback: (text: any) =
     })
         .then(res => res.json())
         .then(json => {
-            if (require_auth && json.status === "Err" && json.message === "Invalid credentials.") {
-                window.location.href = "/admin?from_page=" + window.location.pathname;
-                return;
+            if (json.status === "Err") {
+                if (require_auth && json.status === "Err" && json.message === "Invalid credentials.") {
+                    window.location.href = "/admin?from_page=" + window.location.pathname;
+                    return;
+                }
+                catch_err(json);
+                callback(json)
             }
-            callback(json)
         })
         .catch(err => console.log(err));
 }
 
-export function form_api_post(url: string, appender: (fd: FormData) => void, callback: (data: any) => void, require_auth: boolean = true) {
+export function form_api_post(
+    url: string, 
+    appender: (fd: FormData) => void,
+    callback: (data: any) => void,
+    catch_err: (data: any | TypeError) => void,
+    require_auth: boolean = false,
+) {
     const full_url = get(api_url) + url;
 
     const _session_id = get(session_id);
@@ -61,11 +76,15 @@ export function form_api_post(url: string, appender: (fd: FormData) => void, cal
     })
         .then(res => res.json())
         .then(json => {
-            if (require_auth && json.status === "Err" && json.message === "Invalid credentials.") {
-                window.location.href = "/admin?from_page=" + window.location.pathname;
+            if (json.status === "Err") {
+                if (require_auth && json.message === "Invalid credentials.") {
+                    window.location.href = "/admin?from_page=" + window.location.pathname;
+                    return;
+                }
+                catch_err(json);
                 return;
             }
             callback(json)
         })
-        .catch(err => console.log(err));
+        .catch(err => catch_err(err));
 }

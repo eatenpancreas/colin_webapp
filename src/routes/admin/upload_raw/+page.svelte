@@ -1,5 +1,8 @@
 <script lang="ts">
     import {form_api_post} from "$lib/api/php_interface";
+    import InputForm from "$lib/components/admin/InputForm.svelte";
+    import CTAButton from "$lib/components/styled/CTAButton.svelte";
+    import AppBounds from "$lib/components/general/AppBounds.svelte";
 
     function postImage(event: Event) {
         event.preventDefault();
@@ -13,11 +16,8 @@
     }
 </script>
 
-<a href="./" class="absolute top-10 left-32">Ga terug</a>
-
-<form method="post" enctype="multipart/form-data">
-    <label for="file"><span>Filename:</span></label>
-    <input class="text-black" type="file" name="file" id="file" />
-    <br />
-    <input class="underline text-blue-600 bg-white" type="submit" name="submit" value="Submit" on:click={postImage} />
-</form>
+<AppBounds>
+    <div class="w-screen"></div>
+    <InputForm type="file" title="Filename" id="file"/>
+    <CTAButton click={postImage}>Uploaden</CTAButton>
+</AppBounds>

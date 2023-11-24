@@ -11,6 +11,7 @@ export default {
       },
       fontFamily: {
         'body': ['Nunito'],
+        'mont': ['Montserrat']
       },
     },
   },

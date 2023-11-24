@@ -23,13 +23,13 @@
 {#if imagesData.length <= 0}
     Nog niks
 {:else }
-    <div class="overflow-x-scroll max-w-full">
-        <div class="flex gap-8 w-max">
+    <div class="overflow-x-scroll max-w-full py-20 px-4 sm:px-12 lg:py-20">
+        <div class="flex gap-8 w-max overflow-y-visible h-48 sm:h-72 lg:h-96">
             {#each imagesData as {file, name}}
-                <button on:click={() => {
-                clicked_image = file
-            }} >
-                    <img class="rounded p-2 hover:p-0 hover:m-2 transition-all h-96" src={file} alt={name}/>
+                <button class="rounded hover:brightness-125 hover:scale-125 transition-all h-48 sm:h-72 lg:h-96" on:click={() => {
+                    clicked_image = file
+                }}>
+                    <img class="shadow-xl shadow-amber-50/20 h-full" src={file} alt={name}/>
                 </button>
             {/each}
         </div>
@@ -40,6 +40,6 @@
     <button class="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center" on:click={() => {
         clicked_image = "";
     }}>
-        <img class="max-h-full max-w-full" src={clicked_image} alt="clicked image" />
+        <img class="max-h-full max-w-full" src={clicked_image} alt="img" />
     </button>
 {/if}

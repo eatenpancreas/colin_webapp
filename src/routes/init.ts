@@ -7,3 +7,7 @@ export default function () {
         console.log("local_url set to " + window.location.origin + '/api/');
     }
 }
+
+function getSearchParams(): URLSearchParams {
+    return new URLSearchParams(window.location.search.replace("?", ''));
+}
